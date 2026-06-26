@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Dimensión de clientes a grano persona."
+    columns:
+      - name: customer_unique_id
+        tests: [not_null, unique]
+
+  - name: fct_customer_segments
+    description: "Asignación de segmento por cliente (ML o baseline SQL)."
+    columns:
+      - name: customer_unique_id
+        tests: [not_null, unique]
+      - name: segment_label
+        tests: [not_null]
+
+  - name: mart_bi_customer_segments
+    description: "Mart ancha lista para herramientas de BI. Grano: persona."
+    columns:
+      - name: customer_unique_id
+        tests: [not_null, unique]
+      - name: segment_label
+        tests:
+          - accepted_values:
+              values: ['Recurrente alto', 'Recurrente', 'Itinerante', 'Metropolitano', 'Estándar regional']
+              config:
+                severity: warn

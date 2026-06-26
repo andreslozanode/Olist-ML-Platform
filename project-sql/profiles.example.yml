@@ -1,0 +1,27 @@
+# Copiar a ~/.dbt/profiles.yml y completar con secretos (o usar env vars en CI).
+olist_snowflake:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      authenticator: "{{ env_var('SNOWFLAKE_AUTHENTICATOR', 'snowflake') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD', '') }}"
+      role: TRANSFORMER
+      database: ANALYTICS
+      warehouse: TRANSFORM_WH
+      schema: dbt_dev
+      threads: 8
+      client_session_keep_alive: false
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      authenticator: "{{ env_var('SNOWFLAKE_AUTHENTICATOR', 'snowflake') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD', '') }}"
+      role: TRANSFORMER
+      database: ANALYTICS
+      warehouse: TRANSFORM_WH
+      schema: marts
+      threads: 12

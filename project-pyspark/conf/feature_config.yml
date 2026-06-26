@@ -1,0 +1,31 @@
+# Configuración del pipeline. En Databricks, sobreescribir 'paths' con rutas de Volumes.
+paths:
+  raw_customers: "../data/raw/olist_customers_dataset.csv"
+  bronze: "./data/bronze/customers"
+  silver_features: "./data/silver/customer_features"
+  gold_segments: "./data/gold/customer_segments"
+  model_dir: "./artifacts/model"
+
+model:
+  k: 5
+  k_search_min: 3
+  k_search_max: 8
+  max_iter: 50
+  seed: 42
+  features:
+    - num_orders
+    - is_repeat_customer
+    - num_distinct_states
+    - num_distinct_cities
+    - zip_macro_region
+    - state_market_share
+    - region_idx
+
+spark:
+  app_name: "olist-customer-segmentation"
+  shuffle_partitions: 64
+  aqe_enabled: true
+  broadcast_threshold_mb: 32
+
+model_version: "v1.0.0"
+output_format: "parquet"   # usar "delta" en Databricks

@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Órdenes limpias y tipadas (grano: customer_id)."
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+      - name: customer_state
+        tests:
+          - relationships:
+              to: ref('br_state_region')
+              field: state_code

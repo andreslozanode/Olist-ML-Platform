@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: raw
+    database: ANALYTICS
+    schema: RAW
+    description: "Datos crudos cargados desde el e-commerce (Olist)."
+    tables:
+      - name: olist_customers
+        description: "Una fila por orden (customer_id). customer_unique_id = persona."
+        loaded_at_field: _loaded_at
+        freshness:
+          warn_after: { count: 36, period: hour }
+          error_after: { count: 72, period: hour }
+        columns:
+          - name: customer_id
+            tests: [not_null, unique]
+          - name: customer_unique_id
+            tests: [not_null]

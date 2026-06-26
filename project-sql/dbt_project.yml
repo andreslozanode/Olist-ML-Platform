@@ -1,0 +1,38 @@
+name: "olist_segmentation"
+version: "1.0.0"
+config-version: 2
+profile: "olist_snowflake"
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+vars:
+  model_version: "v1.0.0"
+  # tabla poblada por el modelo Snowpark ML (sp_train_kmeans_segments)
+  ml_segments_relation: "ANALYTICS.ML.CUSTOMER_SEGMENTS_ML"
+
+models:
+  olist_segmentation:
+    +materialized: view
+    staging:
+      +schema: staging
+    intermediate:
+      +schema: intermediate
+      +materialized: ephemeral
+    marts:
+      +schema: marts
+      +materialized: table
+      # cluster keys para pruning en BI (Snowflake)
+      mart_bi_customer_segments:
+        +cluster_by: ["primary_region", "segment_id"]
+
+seeds:
+  olist_segmentation:
+    br_state_region:
+      +schema: staging
+      +column_types:
+        state_code: varchar(2)
